@@ -78,7 +78,7 @@ namespace funct {
             }
             return false;
         }
-        std::vector<Vertex> vertices() const {
+        vector<Vertex> vertices() const {
             return _vert;
         }
         bool has_edge(const Vertex& from, const Vertex& to) const {
@@ -164,5 +164,64 @@ namespace funct {
             reverse(path.begin(), path.end());
             return path;
         }
+        vector<Vertex> walk(const Vertex& start_vertex) const {
+            queue<Vertex> queue;
+            unordered_map<Vertex, bool> visited;
+            unordered_map<Vertex, int> depth;
+
+            queue.push(start_vertex);
+            visited[start_vertex] = true;
+            depth[start_vertex] = 0;
+
+            vector<Vertex> result;
+
+            while (!queue.empty()) {
+                Vertex current = queue.front();
+                queue.pop();
+                result.push_back(current);
+
+                for (const Edge& edge : _edges) {
+                    if (edge.from == current) {
+                        if (!visited[edge.to]) {
+                            visited[edge.to] = true;
+                            queue.push(edge.to);
+                            depth[edge.to] = depth[current] + 1;
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        Vertex find_optimal_warehouse() const {
+            Vertex optimal_warehouse;
+            Distance min_avg_distance = std::numeric_limits<Distance>::max();
+
+            for (const Vertex& vertex : _vertices) {
+                Distance total_distance = 0;
+                size_t count = 0;
+
+                for (const Vertex& v : _vertices) {
+                    if (v != vertex) {
+                        std::vector<Edge> path = shortest_path(vertex, v);
+                        for (const Edge& edge : path) {
+                            total_distance += edge.distance;
+                        }
+                        count++;
+                    }
+                }
+
+                Distance avg_distance = total_distance / count;
+
+                if (avg_distance < min_avg_distance) {
+                    min_avg_distance = avg_distance;
+                    optimal_warehouse = vertex;
+                }
+            }
+
+            return optimal_warehouse;
+        }
+
     };
 }
