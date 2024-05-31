@@ -121,13 +121,17 @@ TEST(GraphTests, ShortestPathTest) {
 TEST(GraphTests, WarehouseTest) {
 	Graph<int> g;
 
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < 4; i++)
 		g.add_vertex(i);
 
 	g.add_edge(0, 1, 5);
+	g.add_edge(1, 0, 5);
 	g.add_edge(0, 2, 10);
+	g.add_edge(2, 0, 10);
 	g.add_edge(1, 2, 4);
+	g.add_edge(2, 1, 4);
 	g.add_edge(2, 3, 3);
+	g.add_edge(3, 2, 3);
 
 	g.print();
 

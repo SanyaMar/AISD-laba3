@@ -210,11 +210,7 @@ namespace funct {
 
             return result;
         }
-        //Задача    
-        /*1. Пусть дан связный граф, в котором узлы – это торговые точки.
-            Необходимо превратить одну из торговых точек в склад.Очевидно, склад должен иметь минимальное среднее расстояние до остальных точек.
-            Напишите функцию, которая находит такую точку.*/
-
+        //Задача   
         Distance average_distance(const Vertex& v) const {
             Distance dist = 0;
             size_t count = 0;
@@ -233,7 +229,7 @@ namespace funct {
         }
 
         Vertex warehouse() const{
-            Vertex vertex;
+            Vertex vertex= _vertices[0];
             Distance min_distance = numeric_limits<Distance>::max();
 
             for (auto& v : _vertices) {
