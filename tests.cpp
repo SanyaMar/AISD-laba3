@@ -48,6 +48,7 @@ TEST(GraphTest, AddHasEdgesTest) {
 	EXPECT_TRUE(g.has_edge(1, 3));
 	EXPECT_TRUE(g.has_edge(2, 3));
 	EXPECT_TRUE(g.has_edge(3, 10));
+	EXPECT_TRUE(g.has_edge(Edge<int, double>(1, 2, 5)));
 	EXPECT_FALSE(g.has_edge(1, 10));
 }
 
@@ -96,20 +97,26 @@ TEST(GraphTests, WalkTest) {
 TEST(GraphTests, ShortestPathTest) {
 	Graph<int> g;
 
-	for (int i = 0; i < 8; i++)
+	/*for (int i = 0; i < 8; i++)
 		g.add_vertex(i);
-
-	g.add_edge(0, 2, 5);
-	g.add_edge(1, 3, 8);
-	g.add_edge(2, 3, 4);
-	g.add_edge(3, 5, 11);
-	g.add_edge(3, 4, 6);
-	g.add_edge(4, 6, 2);
 	g.add_edge(6, 7, 1);
+	g.add_edge(0, 2, 5);
 	g.add_edge(2, 7, 3);
+	g.add_edge(1, 3, 8);
+	g.add_edge(3, 5, 11);
+	g.add_edge(2, 3, 4);
+	g.add_edge(3, 4, 6);
+	g.add_edge(4, 6, 2);*/
 
+	for (int i = 0; i < 5; i++)
+		g.add_vertex(i);
+	g.add_edge(3, 2, 4);
+	g.add_edge(3, 4, 4);
+	g.add_edge(2, 4, 4);
+	g.add_edge(1, 2, 9);
+	g.add_edge(1, 3, 7);
 
-	auto path = g.shortest_path(0, 7).first;
+	auto path = g.shortest_path(1, 4).first;
 	int count = 0;
 	for (const auto& e : path) {
 		cout << e.from << " --> " << e.to << " : " << e.distance << endl;

@@ -70,14 +70,14 @@ namespace funct {
         }
         //удаление ребра c учетом расстояния
         bool remove_edge(const Edge<Vertex, Distance>& e) {
-            if (has_edge(e)) {
-                for (int i = 0; i < _edges.size(); i++) {
-                    if (_edges[i].from == e.from && _edges[i].to == e.to && _edges[i].distance == e.distance)
-                        _edges.erase(_edges.begin() + i);
-                    return true;
+            bool f = false;
+            for (int i = 0; i < _edges.size(); i++) {
+                if (_edges[i].from == e.from && _edges[i].to == e.to && _edges[i].distance == e.distance){
+                    _edges.erase(_edges.begin() + i);
+                    f = true;
                 }
             }
-            return false;
+            return f;
         }
             
         //проверка ребра
@@ -91,7 +91,7 @@ namespace funct {
         }
         //проверка ребра c учетом расстояния 
         bool has_edge(const Edge<Vertex, Distance>& e) const {
-            for (const auto& edge : _edges) {
+            for (const Edge<Vertex, Distance>& edge : _edges) {
                 if (edge.from == e.from && edge.to == e.to && edge.distance == e.distance) {
                     return true;
                 }
@@ -100,7 +100,7 @@ namespace funct {
         }
         //добавление ребра
         void add_edge(const Vertex& from, const Vertex& to, const Distance& d) {
-            if (has_vertex(from) || has_vertex(to)) {
+            if (has_vertex(from) && has_vertex(to)) {
 
                 Edge edge(from, to, d);
                 if (!has_edge(edge)) {
@@ -113,9 +113,10 @@ namespace funct {
             if (has_edge(from, to)) {
 
                 for (int i = 0; i < _edges.size(); i++) {
-                    if (_edges[i].from == from && _edges[i].to == to)
+                    if (_edges[i].from == from && _edges[i].to == to) {
                         _edges.erase(_edges.begin() + i);
-                    return true;
+                        return true;
+                    }
                 }
             }
             return false;
@@ -132,7 +133,7 @@ namespace funct {
         }
         //порядок 
         size_t order() const {
-            return _vertices.size();
+            return (size_t)_vertices.size();
         }
         //степень вершины
         size_t degree(const Vertex& v) const {
@@ -157,7 +158,7 @@ namespace funct {
                 }
                 distances[from] = 0;
                 for (size_t i = 0;i < _vertices.size() - 1; ++i) {
-                    for (const auto& edge : _edges) {
+                    for (const Edge<Vertex, Distance>& edge : _edges) {
                         if (distances[edge.from] + edge.distance < distances[edge.to]) {
                             distances[edge.to] = distances[edge.from] + edge.distance;
                             previous[edge.to] = edge.from;
@@ -184,11 +185,11 @@ namespace funct {
         vector<Vertex> walk(const Vertex& start_vertex) const {
             queue<Vertex> queue;
             unordered_map<Vertex, bool> visited;
-            unordered_map<Vertex, int> depth;
+           // unordered_map<Vertex, int> depth;
 
             queue.push(start_vertex);
             visited[start_vertex] = true;
-            depth[start_vertex] = 0;
+            //depth[start_vertex] = 0;
 
             vector<Vertex> result;
 
@@ -202,7 +203,7 @@ namespace funct {
                         if (!visited[edge.to]) {
                             visited[edge.to] = true;
                             queue.push(edge.to);
-                            depth[edge.to] = depth[current] + 1;
+                           // depth[edge.to] = depth[current] + 1;
                         }
                     }
                 }
@@ -210,7 +211,7 @@ namespace funct {
 
             return result;
         }
-        //Задача   
+        //среднее расстояние от вершины v до всех остальных вершин в графе   
         Distance average_distance(const Vertex& v) const {
             Distance dist = 0;
             size_t count = 0;
@@ -227,16 +228,16 @@ namespace funct {
 
             return dist / count;
         }
-
+        //ищет вершину с минимальным средним расстоянием от неё до всех остальных вершин.
         Vertex warehouse() const{
             Vertex vertex= _vertices[0];
-            Distance min_distance = numeric_limits<Distance>::max();
+            Distance man_distance = numeric_limits<Distance>::max();
 
             for (auto& v : _vertices) {
                 Distance average = average_distance(v);
 
-                if (average < min_distance) {
-                    min_distance = average;
+                if (average < man_distance) {
+                    man_distance = average;
                     vertex = v;
                 }
             }
